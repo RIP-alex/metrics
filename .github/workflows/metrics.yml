@@ -28,21 +28,53 @@ jobs:
           token: ${{ secrets.GH_TOKEN }} # Utilise le PAT stocké en secret
           user: rip-alex # Votre nom d'utilisateur GitHub
           template: classic # Un template de base
-          base: header, activity, community, repositories, metadata # Types de données à inclure
-          config_timezone: Europe/Paris # Fuseau horaire pour les statistiques
-          # Pour les contributions privées, metrics les inclura automatiquement si le PAT a les permissions
-          # Les options suivantes sont des exemples pour ce que vous aviez avec github-readme-stats
-          plugin_isocalendar: yes # Calendrier de contributions
-          plugin_isocalendar_duration: full # Durée complète du calendrier
-          plugin_languages: yes # Statistiques sur les langages
-          plugin_languages_sections: most-used, recently-used # Sections des langages
+          # Fichier de sortie pour les métriques
+          filename: github-metrics.svg # Le nom du fichier SVG généré (celui que vous inclurez dans votre README)
+
+          # --- Options de base et affichage général ---
+          base: header, activity, community, repositories, metadata # Types de données de base à inclure
+          config_timezone: Europe/Paris # Fuseau horaire pour les statistiques (ajustez si besoin)
+          # Inclure les contributions privées (le token le permet déjà, mais ces options confirment)
+          # C'est la permission du token qui est clé pour les repos privés, pas une option ici.
+          # Les données privées sont automatiquement incluses si le PAT est correct.
+
+          # --- Plugin : Calendrier de contributions (isocalendar) ---
+          plugin_isocalendar: yes
+          plugin_isocalendar_duration: full # Affiche le calendrier de contributions sur une année complète
+
+          # --- Plugin : Langages les plus utilisés (languages) ---
+          plugin_languages: yes
+          plugin_languages_sections: most-used, recently-used # Affiche les langages les plus utilisés et ceux utilisés récemment
           plugin_languages_limit: 8 # Nombre de langages affichés
-          plugin_languages_recent_days: 14 # Langages utilisés récemment
-          plugin_languages_threshold: 0% # Seuil minimum d'utilisation d'un langage
-          # Pour afficher toutes les activités, y compris privées
+          plugin_languages_recent_days: 30 # Prend en compte les contributions des 30 derniers jours pour "recently-used"
+          plugin_languages_threshold: 0% # Inclut les langages même s'ils ont une petite contribution
+          plugin_languages_indepth: yes # Analyse plus en profondeur (peut augmenter le temps de génération)
+          plugin_languages_details: bytes, percentage # Affiche la taille en bytes et le pourcentage
+
+          # --- Plugin : Série de contributions (streak) ---
+          plugin_streak: yes
+          plugin_streak_json: yes # Pour s'assurer que les données de streak sont bien traitées
+          # `metrics` inclura automatiquement les contributions privées dans la streak si le token est configuré
+
+          # --- Plugin : Activité récente (activity) ---
+          # Permet d'afficher une section d'activité récente, y compris des dépôts privés
           plugin_activity: yes
-          plugin_activity_filter: all
-          plugin_activity_limit: 5
-          plugin_activity_days: 14
-          plugin_activity_timestamps: yes
-          plugin_activity_visibility: all # Très important pour les activités privées
+          plugin_activity_filter: all # Inclut tous les types d'activité
+          plugin_activity_limit: 5 # Nombre d'événements d'activité à afficher
+          plugin_activity_days: 14 # Prend en compte l'activité des 14 derniers jours
+          plugin_activity_timestamps: yes # Affiche les horodatages
+          plugin_activity_visibility: all # Très important pour inclure les activités privées
+
+          # --- Autres plugins (exemples, vous pouvez les ajouter si vous voulez) ---
+          # plugin_stars: yes # Statistiques sur les étoiles de vos dépôts
+          # plugin_stargazers: yes # Statistiques sur les étoiles que vous avez données
+
+          # --- Personnalisation du thème (similaire à tokyonight) ---
+          # Vous pouvez ajuster les couleurs ici ou laisser metrics choisir son propre thème par défaut
+          # color_text: "#c0c0c0"
+          # color_bg: "#1a1b26"
+          # color_border: "#545454"
+          # Vous pouvez aussi utiliser un preset de thème si vous le souhaitez
+          # base: # ...
+          # config_display: columns
+          # config_output: compact
